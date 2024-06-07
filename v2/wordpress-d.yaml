@@ -1,4 +1,4 @@
-# wordpress-deployment.yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,13 +16,16 @@ spec:
       - name: wordpress
         image: wordpress:latest
         env:
-        - name: WORDPRESS_DB_HOST
-          value: mysql:3306
         - name: WORDPRESS_DB_NAME
           valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-database
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_DB_NAME
+        - name: WORDPRESS_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_DB_HOST
         - name: WORDPRESS_DB_USER
           valueFrom:
             secretKeyRef:
@@ -34,24 +37,45 @@ spec:
               name: mysql-secret
               key: mysql-password
         - name: WORDPRESS_AUTH_KEY
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_AUTH_KEY
         - name: WORDPRESS_SECURE_AUTH_KEY
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_SECURE_AUTH_KEY
         - name: WORDPRESS_LOGGED_IN_KEY
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_LOGGED_IN_KEY
         - name: WORDPRESS_NONCE_KEY
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_NONCE_KEY
         - name: WORDPRESS_AUTH_SALT
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_AUTH_SALT
         - name: WORDPRESS_SECURE_AUTH_SALT
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_SECURE_AUTH_SALT
         - name: WORDPRESS_LOGGED_IN_SALT
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_LOGGED_IN_SALT
         - name: WORDPRESS_NONCE_SALT
-          value: "put your unique phrase here"
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_NONCE_SALT
         ports:
         - containerPort: 80
           name: wordpress
-        
-
-

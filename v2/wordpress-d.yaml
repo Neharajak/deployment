@@ -1,0 +1,64 @@
+# wordpress-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:latest
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql:3306
+        - name: WORDPRESS_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-database
+        - name: WORDPRESS_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-user
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-password
+        - name: WORDPRESS_AUTH_KEY
+          value: "put your unique phrase here"
+        - name: WORDPRESS_SECURE_AUTH_KEY
+          value: "put your unique phrase here"
+        - name: WORDPRESS_LOGGED_IN_KEY
+          value: "put your unique phrase here"
+        - name: WORDPRESS_NONCE_KEY
+          value: "put your unique phrase here"
+        - name: WORDPRESS_AUTH_SALT
+          value: "put your unique phrase here"
+        - name: WORDPRESS_SECURE_AUTH_SALT
+          value: "put your unique phrase here"
+        - name: WORDPRESS_LOGGED_IN_SALT
+          value: "put your unique phrase here"
+        - name: WORDPRESS_NONCE_SALT
+          value: "put your unique phrase here"
+        ports:
+        - containerPort: 80
+          name: wordpress
+        volumeMounts:
+        - name: wordpress-config-volume
+          mountPath: /var/www/html/wp-config.php
+          subPath: wp-config.php
+      volumes:
+      - name: wordpress-config-volume
+        configMap:
+          name: wordpress-config
+
+

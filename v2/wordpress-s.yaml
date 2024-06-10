@@ -2,11 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress
+  namespace: wordpress
 spec:
   type: NodePort
   ports:
     - port: 80
+      nodePort: 30080
       targetPort: 80
-      nodePort: 30036  # You can specify a port or let Kubernetes assign one
   selector:
     app: wordpress
+    tier: frontend

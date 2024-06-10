@@ -1,16 +1,9 @@
-# wordpress-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: wordpress-config
+  namespace: wordpress
 data:
+  WORDPRESS_DB_HOST: wordpress-mysql
   WORDPRESS_DB_NAME: wordpress
-  WORDPRESS_DB_HOST: mysql
-  WORDPRESS_AUTH_KEY: "your_unique_phrase_here"
-  WORDPRESS_SECURE_AUTH_KEY: "your_unique_phrase_here"
-  WORDPRESS_LOGGED_IN_KEY: "your_unique_phrase_here"
-  WORDPRESS_NONCE_KEY: "your_unique_phrase_here"
-  WORDPRESS_AUTH_SALT: "your_unique_phrase_here"
-  WORDPRESS_SECURE_AUTH_SALT: "your_unique_phrase_here"
-  WORDPRESS_LOGGED_IN_SALT: "your_unique_phrase_here"
-  WORDPRESS_NONCE_SALT: "your_unique_phrase_here"
+  WORDPRESS_DB_USER: root

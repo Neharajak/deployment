@@ -1,81 +1,46 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wordpress
+  namespace: wordpress
 spec:
   selector:
     matchLabels:
       app: wordpress
+      tier: frontend
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app: wordpress
+        tier: frontend
     spec:
       containers:
-      - name: wordpress
-        image: wordpress:latest
+      - image: wordpress:4.8-apache
+        name: wordpress
         env:
-        - name: WORDPRESS_DB_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_DB_NAME
         - name: WORDPRESS_DB_HOST
           valueFrom:
             configMapKeyRef:
               name: wordpress-config
               key: WORDPRESS_DB_HOST
+        - name: WORDPRESS_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_DB_NAME
         - name: WORDPRESS_DB_USER
           valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: mysql-user
+            configMapKeyRef:
+              name: wordpress-config
+              key: WORDPRESS_DB_USER
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-secret
-              key: mysql-password
-        - name: WORDPRESS_AUTH_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_AUTH_KEY
-        - name: WORDPRESS_SECURE_AUTH_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_SECURE_AUTH_KEY
-        - name: WORDPRESS_LOGGED_IN_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_LOGGED_IN_KEY
-        - name: WORDPRESS_NONCE_KEY
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_NONCE_KEY
-        - name: WORDPRESS_AUTH_SALT
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_AUTH_SALT
-        - name: WORDPRESS_SECURE_AUTH_SALT
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_SECURE_AUTH_SALT
-        - name: WORDPRESS_LOGGED_IN_SALT
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_LOGGED_IN_SALT
-        - name: WORDPRESS_NONCE_SALT
-          valueFrom:
-            configMapKeyRef:
-              name: wordpress-config
-              key: WORDPRESS_NONCE_SALT
+              name: mysql-pass
+              key: password
         ports:
         - containerPort: 80
           name: wordpress
+        
